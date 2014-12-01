@@ -1,0 +1,7 @@
+#disable_html_escaping()
+$subject
+#dashes($subject)
+
+
+$message
+#parse("templates/email/text/includes/footer.vm")

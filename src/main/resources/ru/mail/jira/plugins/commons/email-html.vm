@@ -1,0 +1,14 @@
+#disable_html_escaping()
+#parse( "templates/email/html/includes/emailconstants.vm" )
+#parse( "templates/email/html/includes/header.vm" )
+
+#set( $pageTitle = $subject )
+#rowWrapperNormal( "#parse( 'templates/email/html/includes/patterns/page-title.vm' )" )
+
+#rowWrapperNormalBegin( "", "wrapper-special-margin" )
+#set( $n = "
+" )
+<p>$message.replaceAll( "$n", "<br />" )</p>
+#rowWrapperNormalEnd()
+
+#parse( "templates/email/html/includes/footer.vm" )

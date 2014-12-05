@@ -1,6 +1,8 @@
 package ru.mail.jira.plugins.commons;
 
 import com.atlassian.jira.component.ComponentAccessor;
+import com.atlassian.jira.issue.Issue;
+import com.atlassian.jira.issue.fields.CustomField;
 import com.atlassian.jira.mail.Email;
 import com.atlassian.jira.mail.builder.EmailBuilder;
 import com.atlassian.jira.notification.NotificationRecipient;
@@ -49,6 +51,16 @@ public class CommonUtils {
             userKeys.add(user.getKey());
         }
         return userKeys;
+    }
+
+    public static String getCustomFieldStringValue(Issue issue, long customFieldId) {
+        CustomField customField = ComponentAccessor.getCustomFieldManager().getCustomFieldObject(customFieldId);
+        if (customField != null) {
+            Object customFieldValue = issue.getCustomFieldValue(customField);
+            if (customFieldValue != null)
+                return customFieldValue.toString().trim();
+        }
+        return "";
     }
 
     public static void sendEmail(ApplicationUser recipient, String subject, String message) {

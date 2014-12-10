@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.Response;
 
+@SuppressWarnings("UnusedDeclaration")
 public abstract class RestExecutor<T> {
     private static final String FIELD_HEADER = "X-Atlassian-Rest-Exception-Field";
 

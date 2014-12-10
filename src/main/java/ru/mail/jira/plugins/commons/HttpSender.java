@@ -12,6 +12,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("UnusedDeclaration")
 public class HttpSender {
     private final String url;
     private String user;

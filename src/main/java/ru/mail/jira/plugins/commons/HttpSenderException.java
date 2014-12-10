@@ -2,6 +2,7 @@ package ru.mail.jira.plugins.commons;
 
 import java.io.IOException;
 
+@SuppressWarnings("UnusedDeclaration")
 public class HttpSenderException extends IOException {
     private int responseCode;
     private String requestMessage;

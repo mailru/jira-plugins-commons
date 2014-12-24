@@ -53,14 +53,20 @@ public class CommonUtils {
         return userKeys;
     }
 
-    public static String getCustomFieldStringValue(Issue issue, long customFieldId) {
+    public static CustomField getCustomField(long customFieldId) {
         CustomField customField = ComponentAccessor.getCustomFieldManager().getCustomFieldObject(customFieldId);
-        if (customField != null) {
-            Object customFieldValue = issue.getCustomFieldValue(customField);
-            if (customFieldValue != null)
-                return customFieldValue.toString().trim();
-        }
-        return "";
+        if (customField == null)
+            throw new IllegalStateException(String.format("Custom field (%d) is not found.", customFieldId));
+        return customField;
+    }
+
+    public static String getCustomFieldStringValue(Issue issue, long customFieldId) {
+        CustomField customField = getCustomField(customFieldId);
+        Object customFieldValue = issue.getCustomFieldValue(customField);
+        if (customFieldValue != null)
+            return customFieldValue.toString().trim();
+        else
+            return "";
     }
 
     public static void sendEmail(ApplicationUser recipient, String subject, String message) {

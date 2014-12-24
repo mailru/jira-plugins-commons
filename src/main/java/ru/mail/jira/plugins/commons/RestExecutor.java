@@ -15,7 +15,7 @@ public abstract class RestExecutor<T> {
 
     private final I18nHelper i18n = ComponentAccessor.getJiraAuthenticationContext().getI18nHelper();
 
-    protected abstract T doAction();
+    protected abstract T doAction() throws Exception;
 
     public Response getResponse() {
         return getResponse(Response.Status.OK);

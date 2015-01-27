@@ -22,29 +22,35 @@ public class CommonUtils {
         return (startPos >= 0 && endPos >= 0) ? xml.substring(startPos + startTag.length(), endPos) : "";
     }
 
-    public static String convertUserKeysToJoinedString(List<String> userKeys) {
-        if (userKeys == null)
+    public static String join(List<String> stringList) {
+        if (stringList == null)
             return "";
-
-        StringBuilder sb = new StringBuilder();
-        for (String userKey : userKeys) {
-            ApplicationUser user = ComponentAccessor.getUserManager().getUserByKey(userKey);
-            if (user != null) {
-                if (sb.length() > 0)
-                    sb.append(", ");
-                sb.append(user.getName());
-            }
-        }
-        return sb.toString();
+        return StringUtils.join(stringList, ", ");
     }
 
-    public static List<String> convertJoinedStringToUserKeys(String s) {
-        if (StringUtils.isEmpty(s))
-            return Collections.emptyList();
-        String[] userNames = s.trim().split("\\s*,\\s*");
+    public static List<String> split(String joinedString) {
+        List<String> stringList = new LinkedList<String>();
+        if (StringUtils.isNotBlank(joinedString))
+            for (String s : joinedString.trim().split("\\s*,\\s*"))
+                if (StringUtils.isNotEmpty(s))
+                    stringList.add(s);
+        return stringList;
+    }
 
-        List<String> userKeys = new ArrayList<String>(userNames.length);
-        for (String userName : userNames) {
+    public static String convertUserKeysToJoinedString(List<String> userKeys) {
+        List<String> userNames = new LinkedList<String>();
+        if (userKeys != null)
+            for (String userKey : userKeys) {
+                ApplicationUser user = ComponentAccessor.getUserManager().getUserByKey(userKey);
+                if (user != null)
+                    userNames.add(user.getName());
+            }
+        return join(userNames);
+    }
+
+    public static List<String> convertJoinedStringToUserKeys(String joinedString) {
+        List<String> userKeys = new LinkedList<String>();
+        for (String userName : split(joinedString)) {
             ApplicationUser user = ComponentAccessor.getUserManager().getUserByName(userName);
             if (user == null)
                 throw new IllegalArgumentException(ComponentAccessor.getJiraAuthenticationContext().getI18nHelper().getText("user.picker.errors.usernotfound", userName));

@@ -23,7 +23,14 @@ public abstract class RestExecutor<T> {
 
     public Response getResponse(Response.Status successStatus) {
         try {
-            return Response.status(successStatus).entity(doAction()).build();
+            T actionResult = doAction();
+            Response.ResponseBuilder responseBuilder = Response.status(successStatus).entity(actionResult);
+
+            if (actionResult instanceof byte[])
+                responseBuilder = responseBuilder.type("application/force-download")
+                        .header("Content-Transfer-Encoding", "binary")
+                        .header("charset", "UTF-8");
+            return responseBuilder.build();
         } catch (SecurityException e) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(i18n.getText("login.error.communication")).build();
         } catch (IllegalArgumentException e) {

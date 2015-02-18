@@ -3,6 +3,7 @@ package ru.mail.jira.plugins.commons;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("UnusedDeclaration")
 public class ContractUtils {
     private final static Pattern INN_PATTERN = Pattern.compile("\\d{10}|\\d{12}");
     private final static Pattern SNILS_WITH_CHECKSUM_PATTERN = Pattern.compile("(\\d{3}-\\d{3}-\\d{3}) (\\d{2})");

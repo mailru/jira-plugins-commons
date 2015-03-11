@@ -2,6 +2,8 @@ package ru.mail.jira.plugins.commons;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,5 +91,15 @@ public class LocalUtils {
         }
 
         return StringUtils.join(result, " ");
+    }
+
+    public static final String[] MONTH_NAMES_NOMINATIVE = new String[] { "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь" };
+    public static final String[] MONTH_NAMES_GENITIVE = new String[] { "января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря" };
+
+    public static SimpleDateFormat updateMonthNames(SimpleDateFormat simpleDateFormat, String[] monthNames) {
+        DateFormatSymbols dateFormatSymbols = simpleDateFormat.getDateFormatSymbols();
+        dateFormatSymbols.setMonths(monthNames);
+        simpleDateFormat.setDateFormatSymbols(dateFormatSymbols);
+        return simpleDateFormat;
     }
 }

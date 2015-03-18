@@ -76,7 +76,7 @@ public class CommonUtils {
             return "";
     }
 
-    public static boolean isUserInGroups(ApplicationUser user, List<String> groupNames) {
+    public static boolean isUserInGroups(ApplicationUser user, Collection<String> groupNames) {
         if (user == null)
             return false;
 

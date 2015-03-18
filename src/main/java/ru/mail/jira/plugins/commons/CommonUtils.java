@@ -6,6 +6,7 @@ import com.atlassian.jira.issue.fields.CustomField;
 import com.atlassian.jira.mail.Email;
 import com.atlassian.jira.mail.builder.EmailBuilder;
 import com.atlassian.jira.notification.NotificationRecipient;
+import com.atlassian.jira.security.groups.GroupManager;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.mail.queue.MailQueueItem;
 import org.apache.commons.lang3.StringUtils;
@@ -73,6 +74,17 @@ public class CommonUtils {
             return customFieldValue.toString().trim();
         else
             return "";
+    }
+
+    public static boolean isUserInGroups(ApplicationUser user, List<String> groupNames) {
+        if (user == null)
+            return false;
+
+        GroupManager groupManager = ComponentAccessor.getGroupManager();
+        for (String groupName : groupNames)
+            if (groupManager.isUserInGroup(user.getName(), groupName))
+                return true;
+        return false;
     }
 
     public static void sendEmail(ApplicationUser recipient, String subject, String message) {

@@ -1,5 +1,6 @@
 package ru.mail.jira.plugins.commons;
 
+import com.atlassian.crowd.embedded.api.User;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.fields.CustomField;
@@ -8,13 +9,22 @@ import com.atlassian.jira.mail.builder.EmailBuilder;
 import com.atlassian.jira.notification.NotificationRecipient;
 import com.atlassian.jira.security.groups.GroupManager;
 import com.atlassian.jira.user.ApplicationUser;
+import com.atlassian.jira.user.ApplicationUsers;
+import com.atlassian.jira.user.UserUtils;
 import com.atlassian.mail.queue.MailQueueItem;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.*;
 
 @SuppressWarnings("UnusedDeclaration")
 public class CommonUtils {
+    private final static Logger log = LoggerFactory.getLogger(CommonUtils.class);
+
     public static String getXmlTagContent(String xml, String tagName) {
         String startTag = String.format("<%s>", tagName);
         String endTag = String.format("</%s>", tagName);
@@ -87,6 +97,24 @@ public class CommonUtils {
         return false;
     }
 
+    public static boolean sendEmail(String subject, String message, String[] recipients) {
+        boolean emailWasSendedAtLeastOneTime = false;
+        for (String userEmail : recipients) {
+            try {
+                User user = UserUtils.getUserByEmail(userEmail);
+                if (user != null) {
+                    sendEmail(ApplicationUsers.from(user), message, subject);
+                    emailWasSendedAtLeastOneTime = true;
+                } else
+                    log.error("Bad user email => " + userEmail);
+            } catch (Exception e) {
+                log.error(String.format("Error while trying to send email. Subject => %s, message => %s, Recipient => %s",
+                        subject, message, userEmail));
+            }
+        }
+        return emailWasSendedAtLeastOneTime;
+    }
+
     public static void sendEmail(ApplicationUser recipient, String subject, String message) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("subject", subject);
@@ -103,5 +131,11 @@ public class CommonUtils {
                 .addParameters(params)
                 .renderLater();
         ComponentAccessor.getMailQueue().addItem(item);
+    }
+
+    public static String getStackTrace(Throwable e) {
+        Writer stackTrace = new StringWriter();
+        e.printStackTrace(new PrintWriter(stackTrace));
+        return stackTrace.toString();
     }
 }

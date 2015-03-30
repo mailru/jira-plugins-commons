@@ -1,6 +1,5 @@
 package ru.mail.jira.plugins.commons;
 
-import com.atlassian.crowd.embedded.api.User;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.fields.CustomField;
@@ -9,8 +8,7 @@ import com.atlassian.jira.mail.builder.EmailBuilder;
 import com.atlassian.jira.notification.NotificationRecipient;
 import com.atlassian.jira.security.groups.GroupManager;
 import com.atlassian.jira.user.ApplicationUser;
-import com.atlassian.jira.user.ApplicationUsers;
-import com.atlassian.jira.user.UserUtils;
+import com.atlassian.jira.user.util.UserUtil;
 import com.atlassian.mail.queue.MailQueueItem;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -97,22 +95,15 @@ public class CommonUtils {
         return false;
     }
 
-    public static boolean sendEmail(String subject, String message, String[] recipients) {
-        boolean emailWasSendedAtLeastOneTime = false;
-        for (String userEmail : recipients) {
-            try {
-                User user = UserUtils.getUserByEmail(userEmail);
-                if (user != null) {
-                    sendEmail(ApplicationUsers.from(user), message, subject);
-                    emailWasSendedAtLeastOneTime = true;
-                } else
-                    log.error("Bad user email => " + userEmail);
-            } catch (Exception e) {
-                log.error(String.format("Error while trying to send email. Subject => %s, message => %s, Recipient => %s",
-                        subject, message, userEmail));
-            }
+    public static void sendEmail(List<String> recipientKeys, String subject, String message) {
+        UserUtil userUtil = ComponentAccessor.getUserUtil();
+        for (String key : recipientKeys) {
+            ApplicationUser user = userUtil.getUserByKey(key);
+            if (user != null)
+                sendEmail(user, message, subject);
+            else
+                throw new IllegalArgumentException("Bad user key => " + key);
         }
-        return emailWasSendedAtLeastOneTime;
     }
 
     public static void sendEmail(ApplicationUser recipient, String subject, String message) {

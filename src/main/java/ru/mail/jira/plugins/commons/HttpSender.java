@@ -76,6 +76,10 @@ public class HttpSender {
         return send("GET", null);
     }
 
+    public String sendGet(String body) throws IOException {
+        return send("GET", body);
+    }
+
     public String sendPost(String body) throws IOException {
         return send("POST", body);
     }

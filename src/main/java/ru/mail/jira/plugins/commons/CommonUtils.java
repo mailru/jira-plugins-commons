@@ -8,7 +8,7 @@ import com.atlassian.jira.mail.builder.EmailBuilder;
 import com.atlassian.jira.notification.NotificationRecipient;
 import com.atlassian.jira.security.groups.GroupManager;
 import com.atlassian.jira.user.ApplicationUser;
-import com.atlassian.jira.user.util.UserUtil;
+import com.atlassian.jira.user.util.UserManager;
 import com.atlassian.mail.queue.MailQueueItem;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -96,9 +96,9 @@ public class CommonUtils {
     }
 
     public static void sendEmail(List<String> recipientKeys, String subject, String message) {
-        UserUtil userUtil = ComponentAccessor.getUserUtil();
+        UserManager userManager = ComponentAccessor.getUserManager();
         for (String key : recipientKeys) {
-            ApplicationUser user = userUtil.getUserByKey(key);
+            ApplicationUser user = userManager.getUserByKey(key);
             if (user != null)
                 sendEmail(user, message, subject);
             else

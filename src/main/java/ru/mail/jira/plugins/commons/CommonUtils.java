@@ -9,6 +9,7 @@ import com.atlassian.jira.notification.NotificationRecipient;
 import com.atlassian.jira.security.groups.GroupManager;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.user.util.UserManager;
+import com.atlassian.jira.util.ErrorCollection;
 import com.atlassian.mail.queue.MailQueueItem;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -66,6 +67,16 @@ public class CommonUtils {
             userKeys.add(user.getKey());
         }
         return userKeys;
+    }
+
+    public static String formatErrorCollection(ErrorCollection errorCollection) {
+        Collection<String> lines = new ArrayList<String>();
+        if (errorCollection.getErrorMessages() != null)
+            lines.addAll(errorCollection.getErrorMessages());
+        if (errorCollection.getErrors() != null)
+            for (Map.Entry<String, String> e : errorCollection.getErrors().entrySet())
+                lines.add(String.format("%s: %s", e.getKey(), e.getValue()));
+        return StringUtils.join(lines, "\n");
     }
 
     public static CustomField getCustomField(Long id) {

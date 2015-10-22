@@ -100,7 +100,7 @@ public class CommonUtils {
         for (String key : recipientKeys) {
             ApplicationUser user = userUtil.getUserByKey(key);
             if (user != null)
-                sendEmail(user, message, subject);
+                sendEmail(user, subject, message);
             else
                 throw new IllegalArgumentException("Bad user key => " + key);
         }

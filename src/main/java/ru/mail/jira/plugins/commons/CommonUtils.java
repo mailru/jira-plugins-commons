@@ -8,7 +8,8 @@ import com.atlassian.jira.mail.builder.EmailBuilder;
 import com.atlassian.jira.notification.NotificationRecipient;
 import com.atlassian.jira.security.groups.GroupManager;
 import com.atlassian.jira.user.ApplicationUser;
-import com.atlassian.jira.user.util.UserUtil;
+import com.atlassian.jira.user.util.UserManager;
+import com.atlassian.jira.util.ErrorCollection;
 import com.atlassian.mail.queue.MailQueueItem;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -68,10 +69,27 @@ public class CommonUtils {
         return userKeys;
     }
 
-    public static CustomField getCustomField(long customFieldId) {
-        CustomField customField = ComponentAccessor.getCustomFieldManager().getCustomFieldObject(customFieldId);
+    public static String formatErrorCollection(ErrorCollection errorCollection) {
+        Collection<String> lines = new ArrayList<String>();
+        if (errorCollection.getErrorMessages() != null)
+            lines.addAll(errorCollection.getErrorMessages());
+        if (errorCollection.getErrors() != null)
+            for (Map.Entry<String, String> e : errorCollection.getErrors().entrySet())
+                lines.add(String.format("%s: %s", e.getKey(), e.getValue()));
+        return StringUtils.join(lines, "\n");
+    }
+
+    public static CustomField getCustomField(Long id) {
+        CustomField customField = ComponentAccessor.getCustomFieldManager().getCustomFieldObject(id);
         if (customField == null)
-            throw new IllegalStateException(String.format("Custom field (%d) is not found.", customFieldId));
+            throw new IllegalStateException(String.format("Custom field (%d) is not found.", id));
+        return customField;
+    }
+
+    public static CustomField getCustomField(String id) {
+        CustomField customField = ComponentAccessor.getCustomFieldManager().getCustomFieldObject(id);
+        if (customField == null)
+            throw new IllegalStateException(String.format("Custom field (%s) is not found.", id));
         return customField;
     }
 
@@ -96,9 +114,9 @@ public class CommonUtils {
     }
 
     public static void sendEmail(List<String> recipientKeys, String subject, String message) {
-        UserUtil userUtil = ComponentAccessor.getUserUtil();
+        UserManager userManager = ComponentAccessor.getUserManager();
         for (String key : recipientKeys) {
-            ApplicationUser user = userUtil.getUserByKey(key);
+            ApplicationUser user = userManager.getUserByKey(key);
             if (user != null)
                 sendEmail(user, subject, message);
             else

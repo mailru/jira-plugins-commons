@@ -2,6 +2,7 @@ package ru.mail.jira.plugins.commons;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
@@ -14,6 +15,8 @@ import java.util.Map;
 
 @SuppressWarnings("UnusedDeclaration")
 public class HttpSender {
+    private static final Logger log = Logger.getLogger(HttpSender.class);
+
     private final String url;
     private String user;
     private String password;
@@ -49,6 +52,8 @@ public class HttpSender {
     }
 
     private String send(String method, String body) throws IOException {
+        log.info(String.format("Sending HTTP request: %s", url));
+
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
         try {
             connection.setDoInput(true);

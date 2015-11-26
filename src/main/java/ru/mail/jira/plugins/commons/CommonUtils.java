@@ -17,7 +17,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.net.URLEncoder;
 import java.util.*;
 
 @SuppressWarnings("UnusedDeclaration")
@@ -146,5 +148,14 @@ public class CommonUtils {
         Writer stackTrace = new StringWriter();
         e.printStackTrace(new PrintWriter(stackTrace));
         return stackTrace.toString();
+    }
+
+    public static String formatUrl(String url, Object... params) {
+        try {
+            for (int i = 0; i < params.length; i++)
+                params[i] = URLEncoder.encode(params[i].toString(), "UTF-8");
+        } catch (UnsupportedEncodingException ignored) {
+        }
+        return String.format(url, params);
     }
 }

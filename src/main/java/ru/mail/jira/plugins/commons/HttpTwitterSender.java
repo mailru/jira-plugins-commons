@@ -5,11 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 
-/**
- * Created by i.mashintsev on 25.11.15.
- */
 public class HttpTwitterSender {
-
     private String accessToken;
 
     public String getAccessToken() {
@@ -25,10 +21,9 @@ public class HttpTwitterSender {
             JSONObject response = new JSONObject(sender.sendGet("grant_type=client_credentials"));
             accessToken = response.getString("access_token");
 
-            if (StringUtils.isEmpty(accessToken)) {
+            if (StringUtils.isEmpty(accessToken))
                 throw new AuthenticationException(String.format("There isn't access token. Authorization failed with params %s %s", key, secret));
-            }
-        } catch (Throwable t) {
+        } catch (Exception e) {
             throw new AuthenticationException(String.format("Authorization failed with params %s %s", key, secret));
         }
         return this;

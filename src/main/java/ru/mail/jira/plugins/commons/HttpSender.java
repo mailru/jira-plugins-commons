@@ -37,7 +37,7 @@ public class HttpSender {
         return this;
     }
     public HttpSender setHeaders(Map<String, String> headers) {
-        headers.putAll(headers);
+        this.headers.putAll(headers);
         return this;
     }
 

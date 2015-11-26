@@ -23,12 +23,7 @@ public class HttpSender {
     private final Map<String, String> headers = new HashMap<String, String>();
 
     public HttpSender(String url, Object... params) {
-        try {
-            for (int i = 0; i < params.length; i++)
-                params[i] = URLEncoder.encode(params[i].toString(), "UTF-8");
-        } catch (UnsupportedEncodingException ignored) {
-        }
-        this.url = String.format(url, params);
+        this.url = params != null && params.length > 0 ? CommonUtils.formatUrl(url, params) : url;
     }
 
     public HttpSender setAuthenticationInfo(String user, String password) {
@@ -39,6 +34,11 @@ public class HttpSender {
 
     public HttpSender setHeader(String header, String value) {
         headers.put(header, value);
+        return this;
+    }
+
+    public HttpSender setHeaders(Map<String, String> headers) {
+        this.headers.putAll(headers);
         return this;
     }
 

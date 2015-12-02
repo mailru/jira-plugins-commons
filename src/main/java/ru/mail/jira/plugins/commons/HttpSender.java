@@ -70,11 +70,8 @@ public class HttpSender {
                 String response = IOUtils.toString(connection.getInputStream(), "UTF-8");
                 log.info(String.format("HTTP response body:\n %s", response));
                 return response;
-            }
-            else {
-                String response = "";
-                if (connection.getErrorStream() != null)
-                       response = IOUtils.toString(connection.getErrorStream(), "UTF-8");
+            } else {
+                String response = connection.getErrorStream() != null ? IOUtils.toString(connection.getErrorStream(), "UTF-8") : "";
                 log.info(String.format("HTTP response body:\n %s", response));
                 throw new HttpSenderException(rc, body, response);
             }

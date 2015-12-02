@@ -68,11 +68,11 @@ public class HttpSender {
             int rc = connection.getResponseCode();
             if (rc == HttpURLConnection.HTTP_OK) {
                 String response = IOUtils.toString(connection.getInputStream(), "UTF-8");
-                log.info(String.format("HTTP response body:\n %s", response));
+                log.debug(String.format("HTTP response body:\n %s", response));
                 return response;
             } else {
                 String response = connection.getErrorStream() != null ? IOUtils.toString(connection.getErrorStream(), "UTF-8") : "";
-                log.info(String.format("HTTP response body:\n %s", response));
+                log.debug(String.format("HTTP error stream:\n %s", response));
                 throw new HttpSenderException(rc, body, response);
             }
         } finally {

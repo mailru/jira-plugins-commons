@@ -6,10 +6,8 @@ import org.apache.log4j.Logger;
 
 import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,10 +66,15 @@ public class HttpSender {
                 IOUtils.write(body, connection.getOutputStream());
 
             int rc = connection.getResponseCode();
-            if (rc == HttpURLConnection.HTTP_OK)
-                return IOUtils.toString(connection.getInputStream(), "UTF-8");
-            else
-                throw new HttpSenderException(rc, body, connection.getErrorStream() != null ? IOUtils.toString(connection.getErrorStream(), "UTF-8") : "");
+            if (rc == HttpURLConnection.HTTP_OK) {
+                String response = IOUtils.toString(connection.getInputStream(), "UTF-8");
+                log.debug(String.format("HTTP response body:\n %s", response));
+                return response;
+            } else {
+                String response = connection.getErrorStream() != null ? IOUtils.toString(connection.getErrorStream(), "UTF-8") : "";
+                log.debug(String.format("HTTP error stream:\n %s", response));
+                throw new HttpSenderException(rc, body, response);
+            }
         } finally {
             connection.disconnect();
         }

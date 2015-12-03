@@ -151,7 +151,7 @@ public class CommonUtils {
     }
 
     public static String formatUrl(String url, Object... params) {
-        if(params == null || params.length == 0)
+        if (params == null || params.length == 0)
             return url;
 
         try {

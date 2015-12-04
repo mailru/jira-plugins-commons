@@ -151,6 +151,9 @@ public class CommonUtils {
     }
 
     public static String formatUrl(String url, Object... params) {
+        if (params == null || params.length == 0)
+            return url;
+
         try {
             for (int i = 0; i < params.length; i++)
                 params[i] = URLEncoder.encode(params[i].toString(), "UTF-8");

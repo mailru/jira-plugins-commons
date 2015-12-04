@@ -21,7 +21,7 @@ public class HttpSender {
     private final Map<String, String> headers = new HashMap<String, String>();
 
     public HttpSender(String url, Object... params) {
-        this.url = params != null && params.length > 0 ? CommonUtils.formatUrl(url, params) : url;
+        this.url = CommonUtils.formatUrl(url, params);
     }
 
     public HttpSender setAuthenticationInfo(String user, String password) {
@@ -32,11 +32,6 @@ public class HttpSender {
 
     public HttpSender setHeader(String header, String value) {
         headers.put(header, value);
-        return this;
-    }
-
-    public HttpSender setHeaders(Map<String, String> headers) {
-        this.headers.putAll(headers);
         return this;
     }
 

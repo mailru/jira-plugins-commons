@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @SuppressWarnings("UnusedDeclaration")
@@ -101,5 +102,27 @@ public class LocalUtils {
         dateFormatSymbols.setMonths(monthNames);
         simpleDateFormat.setDateFormatSymbols(dateFormatSymbols);
         return simpleDateFormat;
+    }
+
+    public static boolean isWeekend(Calendar calendar) {
+        return calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY;
+    }
+
+    public static boolean isHoliday(Calendar calendar) {
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        if (month == Calendar.JANUARY && dayOfMonth < 9)
+            return true;
+        if (month == Calendar.FEBRUARY && dayOfMonth == 23)
+            return true;
+        if (month == Calendar.MARCH && dayOfMonth == 8)
+            return true;
+        if (month == Calendar.MAY && (dayOfMonth == 1 || dayOfMonth == 9))
+            return true;
+        if (month == Calendar.JUNE && dayOfMonth == 12)
+            return true;
+        if (month == Calendar.NOVEMBER && dayOfMonth == 4)
+            return true;
+        return false;
     }
 }

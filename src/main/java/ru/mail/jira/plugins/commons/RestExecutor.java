@@ -30,6 +30,9 @@ public abstract class RestExecutor<T> {
                 responseBuilder = responseBuilder.type("application/force-download")
                         .header("Content-Transfer-Encoding", "binary")
                         .header("charset", "UTF-8");
+            else if(actionResult instanceof StreamRestResult)
+                responseBuilder = responseBuilder.entity(((StreamRestResult) actionResult).getInputStream())
+                        .type(((StreamRestResult) actionResult).getContentType());
             return responseBuilder.build();
         } catch (SecurityException e) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(i18n.getText("login.error.communication")).build();

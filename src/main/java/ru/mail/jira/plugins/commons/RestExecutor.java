@@ -1,7 +1,5 @@
 package ru.mail.jira.plugins.commons;
 
-import com.atlassian.jira.component.ComponentAccessor;
-import com.atlassian.jira.util.I18nHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,8 +10,6 @@ public abstract class RestExecutor<T> {
     private static final String FIELD_HEADER = "X-Atlassian-Rest-Exception-Field";
 
     private static final Logger log = LoggerFactory.getLogger(RestExecutor.class);
-
-    private final I18nHelper i18n = ComponentAccessor.getJiraAuthenticationContext().getI18nHelper();
 
     protected abstract T doAction() throws Exception;
 
@@ -32,7 +28,7 @@ public abstract class RestExecutor<T> {
                         .header("charset", "UTF-8");
             return responseBuilder.build();
         } catch (SecurityException e) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity(i18n.getText("login.error.communication")).build();
+            return Response.status(Response.Status.UNAUTHORIZED).entity(e.getMessage()).build();
         } catch (IllegalArgumentException e) {
             Response.ResponseBuilder responseBuilder = Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage());
             if (e instanceof RestFieldException)

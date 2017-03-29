@@ -30,7 +30,13 @@
     </dependencies>
 
     <properties>
-        <jira.version>6.3.6</jira.version>
+        <jira.version>7.3.3</jira.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>atlassian</id>
+            <url>https://maven.atlassian.com/repository/public</url>
+        </repository>
+    </repositories>
 </project>

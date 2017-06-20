@@ -36,6 +36,10 @@ public class SentryClient {
         }
     }
 
+    public static void close() {
+        Sentry.close();
+    }
+
     private static void setContextUser() {
         if (jiraAuthenticationContext != null && jiraAuthenticationContext.isLoggedInUser()) {
             ApplicationUser user = jiraAuthenticationContext.getLoggedInUser();

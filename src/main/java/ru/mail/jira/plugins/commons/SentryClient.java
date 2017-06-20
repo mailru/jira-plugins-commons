@@ -1,6 +1,7 @@
 package ru.mail.jira.plugins.commons;
 
 
+import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.user.ApplicationUser;
 import io.sentry.Sentry;
@@ -9,11 +10,9 @@ import io.sentry.event.UserBuilder;
 public class SentryClient {
     private static JiraAuthenticationContext jiraAuthenticationContext;
 
-    public static void init(JiraAuthenticationContext jiraAuthenticationContext, String dsn) {
-        if (SentryClient.jiraAuthenticationContext == null) {
-            SentryClient.jiraAuthenticationContext = jiraAuthenticationContext;
-            Sentry.init(dsn);
-        }
+    public static void init(String dsn) {
+        jiraAuthenticationContext = ComponentAccessor.getJiraAuthenticationContext();
+        Sentry.init(dsn);
     }
 
     public static void capture(Throwable throwable) {

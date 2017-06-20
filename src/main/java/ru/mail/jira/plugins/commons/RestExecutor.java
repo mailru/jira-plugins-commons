@@ -38,6 +38,7 @@ public abstract class RestExecutor<T> {
                 responseBuilder = responseBuilder.header(FIELD_HEADER, ((RestFieldException) e).getField());
             return responseBuilder.build();
         } catch (Exception e) {
+            SentryClient.capture(e);
             log.error("REST Exception", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
